@@ -190,7 +190,8 @@ public:
         dataBaseOfAirTickets.arr = new AirTicket[AIR_TICKET_ARR_LENGTH];
         dataBaseOfAirTickets.amountOfTickets = 0;
 
-        for (int i = 0; i < AIR_TICKET_ARR_LENGTH; i++) clear(i);
+        for (int i = 0; i < AIR_TICKET_ARR_LENGTH; i++)
+            dataBaseOfAirTickets.arr[i].isFull = false;
     }
 
     void clear(int index) {
@@ -299,7 +300,7 @@ public:
 
         cout << "Параметры полёта: " << endl;
 
-        cout << "Номер рейса: " 
+        cout << "Номер рейса: "
             << dataBaseOfAirTickets.arr[index].flighNumber.airline << " "
             << dataBaseOfAirTickets.arr[index].flighNumber.number << "\n";
 
@@ -355,7 +356,7 @@ public:
         }
     }
 
-    
+
     // находит и возвращает запись по заданному полю (число и строка)
     AirTicket findByField(FIELD field, int requaredValue, string requaredString) {
 
@@ -368,20 +369,23 @@ public:
             tempStruct.flighNumber.number = requaredValue;
             tempStruct.flighNumber.airline[0] = requaredString[0];
             tempStruct.flighNumber.airline[1] = requaredString[1];
+            tempStruct.flighNumber.airline[2] = '\0';
             break;
         case PRICE_FIELD:
             tempStruct.price.value = requaredValue;
             tempStruct.price.currency[0] = requaredString[0];
             tempStruct.price.currency[1] = requaredString[1];
             tempStruct.price.currency[2] = requaredString[2];
+            tempStruct.price.currency[3] = '\0';
             break;
         default:
             break;
         }
-        
+
         int smallestDifference = INT_MAX;
         for (int i = 0; i < AIR_TICKET_ARR_LENGTH; i++) {
-            int currentDifference = abs( compareAnyField(tempStruct, dataBaseOfAirTickets.arr[i], field) );
+            if (!dataBaseOfAirTickets.arr[i].isFull) continue;
+            int currentDifference = abs(compareAnyField(tempStruct, dataBaseOfAirTickets.arr[i], field));
             if (currentDifference < smallestDifference) {
                 smallestDifference = currentDifference;
                 result = dataBaseOfAirTickets.arr[i];
@@ -394,10 +398,10 @@ public:
     // находит и возвращает запись по заданному полю,
     // в данном случае перегрузка только для destination
     AirTicket findByField(
-        FIELD field, 
-        string requaredCountry, 
-        string requaredCity, 
-        string requaredAirport) 
+        FIELD field,
+        string requaredCountry,
+        string requaredCity,
+        string requaredAirport)
     {
         AirTicket result;
         AirTicket tempStruct;
@@ -405,14 +409,18 @@ public:
         switch (field)
         {
         case DESTINATION_FIELD:
-            for (int i = 0; i < requaredCountry.length(); i++) 
+            int i;
+            for (i = 0; i < requaredCountry.length(); i++)
                 tempStruct.destination.country[i] = requaredCountry[i];
+            tempStruct.destination.country[i] = '\0';
 
-            for (int i = 0; i < requaredCity.length(); i++) 
+            for (i = 0; i < requaredCity.length(); i++)
                 tempStruct.destination.city[i] = requaredCity[i];
+            tempStruct.destination.city[i] = '\0';
 
-            for (int i = 0; i < requaredAirport.length(); i++) 
-                tempStruct.destination.country[i] = requaredAirport[i];
+            for (i = 0; i < requaredAirport.length(); i++)
+                tempStruct.destination.airport[i] = requaredAirport[i];
+            tempStruct.destination.airport[i] = '\0';
             break;
         default:
             break;
@@ -420,6 +428,7 @@ public:
 
         int smallestDifference = INT_MAX;
         for (int i = 0; i < AIR_TICKET_ARR_LENGTH; i++) {
+            if (!dataBaseOfAirTickets.arr[i].isFull) continue;
             int currentDifference = abs(compareAnyField(tempStruct, dataBaseOfAirTickets.arr[i], field));
             if (currentDifference < smallestDifference) {
                 smallestDifference = currentDifference;
@@ -451,6 +460,7 @@ public:
 
         int smallestDifference = INT_MAX;
         for (int i = 0; i < AIR_TICKET_ARR_LENGTH; i++) {
+            if (!dataBaseOfAirTickets.arr[i].isFull) continue;
             int currentDifference = abs(compareAnyField(tempStruct, dataBaseOfAirTickets.arr[i], field));
             if (currentDifference < smallestDifference) {
                 smallestDifference = currentDifference;
@@ -484,6 +494,7 @@ public:
 
         int smallestDifference = INT_MAX;
         for (int i = 0; i < AIR_TICKET_ARR_LENGTH; i++) {
+            if (!dataBaseOfAirTickets.arr[i].isFull) continue;
             int currentDifference = abs(compareAnyField(tempStruct, dataBaseOfAirTickets.arr[i], field));
             if (currentDifference < smallestDifference) {
                 smallestDifference = currentDifference;
@@ -498,8 +509,8 @@ public:
     // находит и возвращает запись с минимальным значением заданного поля
     AirTicket findMinimalOfFiled(FIELD field) {
         int amountOfFull = 0;
-        for (int i = 0; i < AIR_TICKET_ARR_LENGTH; i++) 
-            if (dataBaseOfAirTickets.arr[i].isFull) 
+        for (int i = 0; i < AIR_TICKET_ARR_LENGTH; i++)
+            if (dataBaseOfAirTickets.arr[i].isFull)
                 amountOfFull++;
 
         int sortedTempArrCounter = 0;
@@ -510,7 +521,7 @@ public:
                 sortedTempArrCounter++;
             }
         }
-                
+
 
         AirTicket temp;
         for (int i = 0; i < amountOfFull; i++) {
@@ -568,7 +579,7 @@ public:
 
         }
 
-        for (int i = 0; i < AIR_TICKET_ARR_LENGTH; i++) if(dataBaseOfAirTickets.arr[i].isFull) clear(i);
+        for (int i = 0; i < AIR_TICKET_ARR_LENGTH; i++) if (dataBaseOfAirTickets.arr[i].isFull) clear(i);
         for (int i = 0; i < amountOfFull; i++) dataBaseOfAirTickets.arr[i] = sortedTempArr[i];
     }
 
@@ -652,7 +663,7 @@ public:
             return;
         }
 
-        
+
         for (int i = 0; i < AIR_TICKET_ARR_LENGTH; i++) {
             if (dataBaseOfAirTickets.arr[i].isFull) {
                 const string dayStr = dataBaseOfAirTickets.arr[i].departureDate.day < 10
@@ -712,7 +723,7 @@ public:
             fs >> message;
             cout << message;
         }
-        
+
 
         fs.close();
     }
@@ -727,23 +738,16 @@ int main() {
     db.setRandomTicket(3);
     db.setRandomTicket(6);
     db.setRandomTicket(7);
+    db.setFlightProperties(8);
 
     db.printFlightProperties(3);
     db.printFlightProperties(6);
     db.printFlightProperties(7);
+    db.printFlightProperties(8);
 
     db.printOnlyFull();
 
-    cout << db.findMinimalOfFiled(PRICE_FIELD).price.value << endl;
-
-    db.descendingSortByField(DEPARTURE_DATE_FIELD);
-
-    db.printOnlyFull();
-
-    cout << db.findMinimalOfFiled(DESTINATION_FIELD).flighNumber.number;
-
-    char fileName[5] = "fdgs";
-    db.saveAirTicketDataBase(fileName);
+    cout << db.findByField(DESTINATION_FIELD, "AAA", "AAA", "AAA").flighNumber.number << endl;
 
     return 0;
 }
