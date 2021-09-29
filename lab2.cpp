@@ -738,16 +738,36 @@ int main() {
     db.setRandomTicket(3);
     db.setRandomTicket(6);
     db.setRandomTicket(7);
-    db.setFlightProperties(8);
+    db.setFlightProperties(1);
 
-    db.printFlightProperties(3);
-    db.printFlightProperties(6);
-    db.printFlightProperties(7);
-    db.printFlightProperties(8);
-
+    cout << "\n";
+    cout << "Вывод заполненных записей..." << endl;
     db.printOnlyFull();
+    cout << endl;
 
-    cout << db.findByField(DESTINATION_FIELD, "AAA", "AAA", "AAA").flighNumber.number << endl;
+    cout << "Минимальная цена из имеющихся записей: " 
+        << db.findMinimalOfFiled(PRICE_FIELD).price.value << "\n";
+    cout << "Запись соответствует рейсу: " 
+        << db.findMinimalOfFiled(PRICE_FIELD).flighNumber.airline 
+        << db.findMinimalOfFiled(PRICE_FIELD).flighNumber.number << "\n\n";
+
+    cout << "Поиск записи со временем отправления 10:55..." << endl
+        << "Запись соотвествует дате отправления "
+        << db.findByField(DEPARTURE_TIME_FIELD, 10, 55).departureDate.day << "."
+        << db.findByField(DEPARTURE_TIME_FIELD, 10, 55).departureDate.month << "."
+        << db.findByField(DEPARTURE_TIME_FIELD, 10, 55).departureDate.year << "\n\n";
+
+    cout << "Сортировка по возрастанию даты отправления и вывод заполенных записей..." << endl;
+    db.ascendingSortByField(DEPARTURE_DATE_FIELD);
+    db.printOnlyFull();
+    cout << endl;
+
+    char fileName[6] = "saved";
+    cout << "Запись в файл 'saved' данных базы данных без форматирования..." << endl;
+    db.saveAirTicketDataBase(fileName);
+    cout << "Чтение из файла 'saved':" << endl;
+    db.readAirTicketDataBase(fileName);
+    cout << endl;
 
     return 0;
 }
