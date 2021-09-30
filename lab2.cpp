@@ -29,7 +29,7 @@ enum FIELD {
     IS_FULL_FIELD,
 };
 
-struct FlighNumber {
+struct FlightNumber {
     char airline[FLIGHT_NUMBER_AIRLINE_CODE_LENGTH + 1]; // код компании: из двух цифр или букв
     int number; // номер рейса из четырёх цифр
 };
@@ -57,7 +57,7 @@ struct Price {
 };
 
 struct AirTicket {
-    struct FlighNumber flighNumber;
+    struct FlightNumber flightNumber;
     struct Destination destination;
     struct DepartureTime departureTime;
     struct DepartureDate departureDate;
@@ -104,12 +104,12 @@ private:
         char str2[MAX_STRING_LENGTH];
 
         sprintf_s(str1, "%s%d",
-            ticket1.flighNumber.airline,
-            ticket1.flighNumber.number);
+            ticket1.flightNumber.airline,
+            ticket1.flightNumber.number);
 
         sprintf_s(str2, "%s%d",
-            ticket2.flighNumber.airline,
-            ticket2.flighNumber.number);
+            ticket2.flightNumber.airline,
+            ticket2.flightNumber.number);
 
         return strcmp(str1, str2);
     }
@@ -268,8 +268,8 @@ public:
         cout << "Введите значение стоимости билета (целое число): ";
         cin >> tempValue;
 
-        assignStr(dataBaseOfAirTickets.arr[index].flighNumber.airline, tempAirLineNumber);
-        dataBaseOfAirTickets.arr[index].flighNumber.number = tempFlightNumber;
+        assignStr(dataBaseOfAirTickets.arr[index].flightNumber.airline, tempAirLineNumber);
+        dataBaseOfAirTickets.arr[index].flightNumber.number = tempFlightNumber;
 
         assignStr(dataBaseOfAirTickets.arr[index].destination.country, tempCountry);
         assignStr(dataBaseOfAirTickets.arr[index].destination.city, tempCity);
@@ -300,8 +300,8 @@ public:
         cout << "Параметры полёта: " << endl;
 
         cout << "Номер рейса: " 
-            << dataBaseOfAirTickets.arr[index].flighNumber.airline << " "
-            << dataBaseOfAirTickets.arr[index].flighNumber.number << "\n";
+            << dataBaseOfAirTickets.arr[index].flightNumber.airline << " "
+            << dataBaseOfAirTickets.arr[index].flightNumber.number << "\n";
 
         cout << "Место прибытия: "
             << dataBaseOfAirTickets.arr[index].destination.country << ", "
@@ -365,9 +365,9 @@ public:
         switch (field)
         {
         case FLIGHT_NUMBER_FIELD:
-            tempStruct.flighNumber.number = requaredValue;
-            tempStruct.flighNumber.airline[0] = requaredString[0];
-            tempStruct.flighNumber.airline[1] = requaredString[1];
+            tempStruct.flightNumber.number = requaredValue;
+            tempStruct.flightNumber.airline[0] = requaredString[0];
+            tempStruct.flightNumber.airline[1] = requaredString[1];
             break;
         case PRICE_FIELD:
             tempStruct.price.value = requaredValue;
@@ -617,8 +617,8 @@ public:
         }
 
 
-        randomizeString(FLIGHT_NUMBER_AIRLINE_CODE_LENGTH + 1, dataBaseOfAirTickets.arr[index].flighNumber.airline);
-        dataBaseOfAirTickets.arr[index].flighNumber.number = 1000 + rand() % 3000;
+        randomizeString(FLIGHT_NUMBER_AIRLINE_CODE_LENGTH + 1, dataBaseOfAirTickets.arr[index].flightNumber.airline);
+        dataBaseOfAirTickets.arr[index].flightNumber.number = 1000 + rand() % 3000;
         randomizeString(8, dataBaseOfAirTickets.arr[index].destination.country);
         randomizeString(8, dataBaseOfAirTickets.arr[index].destination.city);
         randomizeString(AIRPORT_CODE_LENGTH + 1, dataBaseOfAirTickets.arr[index].destination.airport);
@@ -674,8 +674,8 @@ public:
                     : to_string(dataBaseOfAirTickets.arr[i].departureTime.minute);
 
                 fs
-                    << dataBaseOfAirTickets.arr[i].flighNumber.airline
-                    << dataBaseOfAirTickets.arr[i].flighNumber.number
+                    << dataBaseOfAirTickets.arr[i].flightNumber.airline
+                    << dataBaseOfAirTickets.arr[i].flightNumber.number
                     << ","
                     << dataBaseOfAirTickets.arr[i].destination.country << " "
                     << dataBaseOfAirTickets.arr[i].destination.city << " "
@@ -741,8 +741,8 @@ int main() {
     cout << "Минимальная цена из имеющихся записей: " 
         << db.findMinimalOfFiled(PRICE_FIELD).price.value << "\n";
     cout << "Запись соответствует рейсу: " 
-        << db.findMinimalOfFiled(PRICE_FIELD).flighNumber.airline 
-        << db.findMinimalOfFiled(PRICE_FIELD).flighNumber.number << "\n\n";
+        << db.findMinimalOfFiled(PRICE_FIELD).flightNumber.airline 
+        << db.findMinimalOfFiled(PRICE_FIELD).flightNumber.number << "\n\n";
 
     cout << "Поиск записи со временем отправления 10:55..." << endl
         << "Запись соотвествует дате отправления "
